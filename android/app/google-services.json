@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "580864096250",
+    "firebase_url": "https://virtual-shop-9a365.firebaseio.com",
+    "project_id": "virtual-shop-9a365",
+    "storage_bucket": "virtual-shop-9a365.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:580864096250:android:91b52954d54eb141d8d643",
+        "android_client_info": {
+          "package_name": "br.com.fokushima.virtual_shop"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "580864096250-6kf9p9skb3fo5rl8eagq9iarqnvvv025.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBT3nS9JwNLC9M1u3mR9GvaMbe5HB_3SDE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "580864096250-6kf9p9skb3fo5rl8eagq9iarqnvvv025.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
