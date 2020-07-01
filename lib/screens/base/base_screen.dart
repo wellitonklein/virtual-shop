@@ -6,9 +6,15 @@ import 'package:virtual_shop/models/page_manager.dart';
 import 'package:virtual_shop/models/user_manager.dart';
 import 'package:virtual_shop/screens/admin_users/admin_users.screen.dart';
 import 'package:virtual_shop/screens/home/home_screen.dart';
+import 'package:virtual_shop/screens/orders/orders_screen.dart';
 import 'package:virtual_shop/screens/products/products_screen.dart';
 
-class BaseScreen extends StatelessWidget {
+class BaseScreen extends StatefulWidget {
+  @override
+  _BaseScreenState createState() => _BaseScreenState();
+}
+
+class _BaseScreenState extends State<BaseScreen> {
   final PageController pageController = PageController();
 
   @override
@@ -22,13 +28,7 @@ class BaseScreen extends StatelessWidget {
           children: <Widget>[
             HomeScreen(),
             ProductsScreen(),
-            Scaffold(
-              drawer: CustomDrawer(),
-              appBar: AppBar(
-                title: const Text('Home 3'),
-                centerTitle: true,
-              ),
-            ),
+            OrdersScreen(),
             Scaffold(
               drawer: CustomDrawer(),
               appBar: AppBar(

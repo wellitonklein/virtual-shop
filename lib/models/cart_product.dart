@@ -4,17 +4,33 @@ import 'package:virtual_shop/models/item_size.dart';
 import 'package:virtual_shop/models/product.dart';
 
 class CartProduct extends ChangeNotifier {
-  Product product;
-
   String id;
   String productId;
   int quantity;
   String size;
 
-  CartProduct.fromProduct(this.product) {
+  num fixedPrice;
+
+  Product _product;
+  Product get product => _product;
+  set product(Product value) {
+    _product = value;
+    notifyListeners();
+  }
+
+  CartProduct.fromProduct(this._product) {
     productId = product.id;
     quantity = 1;
     size = product.selectedSize.name;
+  }
+
+  CartProduct.fromMap(Map<String, dynamic> map) {
+    productId = map['product_id'] as String;
+    quantity = map['quantity'] as int;
+    size = map['size'] as String;
+    fixedPrice = map['fixedPrice'] as num;
+
+    _getProduct();
   }
 
   CartProduct.fromDocument(DocumentSnapshot document) {
@@ -23,12 +39,7 @@ class CartProduct extends ChangeNotifier {
     quantity = document.data['quantity'] as int;
     size = document.data['size'] as String;
 
-    firestore.document('products/$productId').get().then(
-      (doc) {
-        product = Product.fromDocument(doc);
-        notifyListeners();
-      },
-    );
+    _getProduct();
   }
 
   Map<String, dynamic> toCartItemMap() {
@@ -39,7 +50,25 @@ class CartProduct extends ChangeNotifier {
     };
   }
 
+  Map<String, dynamic> toOrderItemMap() {
+    return {
+      'product_id': productId,
+      'quantity': quantity,
+      'size': size,
+      'fixedPrice': fixedPrice ?? unitPrice,
+    };
+  }
+
   final Firestore firestore = Firestore.instance;
+
+  void _getProduct() {
+    firestore.document('products/$productId').get().then(
+      (doc) {
+        product = Product.fromDocument(doc);
+        notifyListeners();
+      },
+    );
+  }
 
   ItemSize get itemSize {
     if (product != null) {

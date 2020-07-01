@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:virtual_shop/models/address.dart';
 
 class User {
   String id;
@@ -7,6 +8,8 @@ class User {
   String password;
   String confirmPassword;
   bool admin = false;
+
+  Address address;
 
   User({
     this.id,
@@ -19,6 +22,10 @@ class User {
     id = document.documentID;
     name = document.data['name'] as String;
     email = document.data['email'] as String;
+    if (document.data.containsKey('address')) {
+      address =
+          Address.fromMap(document.data['address'] as Map<String, dynamic>);
+    }
   }
 
   DocumentReference get firestoreRef =>
@@ -30,10 +37,17 @@ class User {
     await firestoreRef.setData(toMap());
   }
 
+  Future<void> setAddress(Address address) async {
+    this.address = address;
+
+    saveData();
+  }
+
   Map<String, dynamic> toMap() {
     return {
       'name': name,
       'email': email,
+      if (address != null) 'address': address.toMap(),
     };
   }
 }

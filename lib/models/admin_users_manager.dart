@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:virtual_shop/models/user.dart';
-import 'package:virtual_shop/models/user_manager.dart';
 
 class AdminUsersManager extends ChangeNotifier {
   final Firestore firestore = Firestore.instance;
@@ -13,10 +12,11 @@ class AdminUsersManager extends ChangeNotifier {
   List<User> get users => [..._users];
   List<String> get names => _users.map((user) => user.name).toList();
 
-  void updateUser(UserManager userManager) {
+  // ignore: avoid_positional_boolean_parameters
+  void updateUser(bool adminEnabled) {
     _subscription?.cancel();
 
-    if (userManager.adminEnabled) {
+    if (adminEnabled) {
       _listenToUsers();
     } else {
       _users.clear();

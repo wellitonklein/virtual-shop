@@ -91,7 +91,7 @@ class Product extends ChangeNotifier {
     );
   }
 
-  List<Map<String, dynamic>> _exportSizeList() {
+  List<Map<String, dynamic>> exportSizeList() {
     return sizes.map((size) => size.toMap()).toList();
   }
 
@@ -101,7 +101,7 @@ class Product extends ChangeNotifier {
     final Map<String, dynamic> data = {
       'name': name,
       'description': description,
-      'sizes': _exportSizeList(),
+      'sizes': exportSizeList(),
     };
 
     if (id == null) {
