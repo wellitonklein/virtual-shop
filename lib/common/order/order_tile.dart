@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:virtual_shop/models/orders/order.dart';
-import 'package:virtual_shop/screens/orders/components/order_product_tile.dart';
+import 'package:virtual_shop/common/order/order_product_tile.dart';
 
 class OrderTile extends StatelessWidget {
   final Order order;
+  final bool showControls;
 
-  const OrderTile({Key key, this.order}) : super(key: key);
+  const OrderTile({Key key, this.order, this.showControls = false})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
     final Color primaryColor = Theme.of(context).primaryColor;
@@ -36,10 +38,11 @@ class OrderTile extends StatelessWidget {
               ],
             ),
             Text(
-              'Em transporte',
+              order.statusText,
               style: TextStyle(
                 fontWeight: FontWeight.w400,
-                color: primaryColor,
+                color:
+                    order.status == Status.canceled ? Colors.red : primaryColor,
                 fontSize: 14,
               ),
             ),
@@ -52,7 +55,34 @@ class OrderTile extends StatelessWidget {
                   (e) => OrderProductTile(cartProduct: e),
                 )
                 .toList(),
-          )
+          ),
+          if (showControls && order.status != Status.canceled)
+            SizedBox(
+              height: 50,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                children: <Widget>[
+                  FlatButton(
+                    onPressed: order.cancel,
+                    textColor: Colors.red,
+                    child: const Text('Cancelar'),
+                  ),
+                  FlatButton(
+                    onPressed: order.back,
+                    child: const Text('Recuar'),
+                  ),
+                  FlatButton(
+                    onPressed: order.advance,
+                    child: const Text('Avançar'),
+                  ),
+                  FlatButton(
+                    onPressed: () {},
+                    textColor: primaryColor,
+                    child: const Text('Endereço'),
+                  ),
+                ],
+              ),
+            ),
         ],
       ),
     );

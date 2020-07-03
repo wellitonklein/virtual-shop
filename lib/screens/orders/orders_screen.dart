@@ -3,8 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:virtual_shop/common/custom_drawer/custom_drawer.dart';
 import 'package:virtual_shop/common/empty_card.dart';
 import 'package:virtual_shop/common/login_card.dart';
+import 'package:virtual_shop/common/order/order_tile.dart';
 import 'package:virtual_shop/models/orders/orders_manager.dart';
-import 'package:virtual_shop/screens/orders/components/order_tile.dart';
 
 class OrdersScreen extends StatelessWidget {
   @override

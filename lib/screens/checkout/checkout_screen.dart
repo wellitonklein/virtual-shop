@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:virtual_shop/common/price_card.dart';
 import 'package:virtual_shop/models/cart_manager.dart';
 import 'package:virtual_shop/models/checkout_manager.dart';
-import 'package:virtual_shop/models/page_manager.dart';
 
 class CheckoutScreen extends StatelessWidget {
   @override
