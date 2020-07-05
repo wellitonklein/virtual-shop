@@ -47,5 +47,28 @@
 	<string>Acessar camera para adicionar imagem</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Acessar camera para adicionar imagem</string>
+
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict> 
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>fb637453966854504</string>
+			</array>
+		</dict>
+	</array>
+	<key>FacebookAppID</key>
+	<string>637453966854504</string>
+	<key>FacebookDisplayName</key>
+	<string>Loja Virtual</string>
+
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+			<string>fbapi</string>
+			<string>fb-messenger-share-api</string>
+			<string>fbauth2</string>
+			<string>fbshareextension</string>
+	</array>
+
 </dict>
 </plist>

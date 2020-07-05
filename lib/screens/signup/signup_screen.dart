@@ -97,51 +97,49 @@ class SignUpScreen extends StatelessWidget {
                     onSaved: (value) => _user.confirmPassword = value,
                   ),
                   const SizedBox(height: 16),
-                  SizedBox(
-                    height: 44,
-                    child: RaisedButton(
-                      color: Theme.of(context).primaryColor,
-                      disabledColor:
-                          Theme.of(context).primaryColor.withAlpha(100),
-                      textColor: Colors.white,
-                      onPressed: userManager.loading
-                          ? null
-                          : () {
-                              if (_formKey.currentState.validate()) {
-                                _formKey.currentState.save();
+                  RaisedButton(
+                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    color: Theme.of(context).primaryColor,
+                    disabledColor:
+                        Theme.of(context).primaryColor.withAlpha(100),
+                    textColor: Colors.white,
+                    onPressed: userManager.loading
+                        ? null
+                        : () {
+                            if (_formKey.currentState.validate()) {
+                              _formKey.currentState.save();
 
-                                if (_user.password != _user.confirmPassword) {
+                              if (_user.password != _user.confirmPassword) {
+                                _scaffoldKey.currentState.showSnackBar(
+                                  SnackBar(
+                                    content:
+                                        const Text('Senhas não coincidem!'),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                );
+                                return;
+                              }
+
+                              userManager.signUp(
+                                user: _user,
+                                onFail: (String e) {
                                   _scaffoldKey.currentState.showSnackBar(
                                     SnackBar(
-                                      content:
-                                          const Text('Senhas não coincidem!'),
+                                      content: Text(e),
                                       backgroundColor: Colors.red,
                                     ),
                                   );
-                                  return;
-                                }
-
-                                userManager.signUp(
-                                  user: _user,
-                                  onFail: (String e) {
-                                    _scaffoldKey.currentState.showSnackBar(
-                                      SnackBar(
-                                        content: Text(e),
-                                        backgroundColor: Colors.red,
-                                      ),
-                                    );
-                                  },
-                                  onSuccess: () => Navigator.of(context).pop(),
-                                );
-                              }
-                            },
-                      child: userManager.loading
-                          ? const CircularProgressIndicator()
-                          : const Text(
-                              'Criar conta',
-                              style: TextStyle(fontSize: 18),
-                            ),
-                    ),
+                                },
+                                onSuccess: () => Navigator.of(context).pop(),
+                              );
+                            }
+                          },
+                    child: userManager.loading
+                        ? const CircularProgressIndicator()
+                        : const Text(
+                            'Criar conta',
+                            style: TextStyle(fontSize: 15),
+                          ),
                   ),
                 ],
               ),

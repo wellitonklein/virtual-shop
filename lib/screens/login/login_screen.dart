@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_signin_button/button_list.dart';
+import 'package:flutter_signin_button/button_view.dart';
 import 'package:provider/provider.dart';
 import 'package:virtual_shop/helpers/validators.dart';
 import 'package:virtual_shop/models/user.dart';
@@ -24,54 +26,64 @@ class LoginScreen extends StatelessWidget {
           child: Form(
             key: _formKey,
             child: Consumer<UserManager>(
-              builder: (_, userManager, __) => ListView(
-                shrinkWrap: true,
-                padding: const EdgeInsets.all(16),
-                children: <Widget>[
-                  TextFormField(
-                    textInputAction: TextInputAction.next,
-                    enabled: !userManager.loading,
-                    controller: _emailController,
-                    decoration: const InputDecoration(hintText: 'E-mail'),
-                    keyboardType: TextInputType.emailAddress,
-                    autocorrect: false,
-                    validator: (value) {
-                      if (!emailValid(value)) {
-                        return 'E-mail inválido';
-                      }
-
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    enabled: !userManager.loading,
-                    controller: _passwordController,
-                    decoration: const InputDecoration(hintText: 'Senha'),
-                    autocorrect: false,
-                    obscureText: true,
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return 'Campo obrigatório';
-                      } else if (value.length < 6) {
-                        return 'Senha muito curta. Mínimo 6 caracteres';
-                      }
-
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 16),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: FlatButton(
-                      padding: EdgeInsets.zero,
-                      onPressed: () {},
-                      child: const Text('Esqueci minha senha'),
+              builder: (_, userManager, __) {
+                if (userManager.loadingFace) {
+                  return Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation(
+                          Theme.of(context).primaryColor),
                     ),
-                  ),
-                  SizedBox(
-                    height: 44,
-                    child: RaisedButton(
+                  );
+                }
+
+                return ListView(
+                  shrinkWrap: true,
+                  padding: const EdgeInsets.all(16),
+                  children: <Widget>[
+                    TextFormField(
+                      textInputAction: TextInputAction.next,
+                      enabled: !userManager.loading,
+                      controller: _emailController,
+                      decoration: const InputDecoration(hintText: 'E-mail'),
+                      keyboardType: TextInputType.emailAddress,
+                      autocorrect: false,
+                      validator: (value) {
+                        if (!emailValid(value)) {
+                          return 'E-mail inválido';
+                        }
+
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    TextFormField(
+                      enabled: !userManager.loading,
+                      controller: _passwordController,
+                      decoration: const InputDecoration(hintText: 'Senha'),
+                      autocorrect: false,
+                      obscureText: true,
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Campo obrigatório';
+                        } else if (value.length < 6) {
+                          return 'Senha muito curta. Mínimo 6 caracteres';
+                        }
+
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: FlatButton(
+                        padding: EdgeInsets.zero,
+                        onPressed: () {},
+                        child: const Text('Esqueci minha senha'),
+                      ),
+                    ),
+                    RaisedButton(
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       color: Theme.of(context).primaryColor,
                       textColor: Colors.white,
                       disabledColor:
@@ -99,24 +111,43 @@ class LoginScreen extends StatelessWidget {
                             },
                       child: userManager.loading
                           ? const CircularProgressIndicator()
-                          : const Text('Entrar',
-                              style: TextStyle(fontSize: 18)),
+                          : const Text(
+                              'Entrar',
+                              style: TextStyle(fontSize: 15),
+                            ),
                     ),
-                  ),
-                  const SizedBox(height: 16),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 100),
-                    child: SizedBox(
-                      height: 25,
-                      child: FlatButton(
-                        onPressed: () => Navigator.of(context)
-                            .pushReplacementNamed('/signup'),
-                        child: const Text('Criar conta'),
+                    SignInButton(
+                      Buttons.Facebook,
+                      text: 'Entrar com Facebook',
+                      onPressed: () {
+                        userManager.facebookLogin(
+                          onFail: (String e) {
+                            _scaffoldKey.currentState.showSnackBar(
+                              SnackBar(
+                                content: Text(e),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          },
+                          onSuccess: () => Navigator.of(context).pop(),
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 100),
+                      child: SizedBox(
+                        height: 25,
+                        child: FlatButton(
+                          onPressed: () => Navigator.of(context)
+                              .pushReplacementNamed('/signup'),
+                          child: const Text('Criar conta'),
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
+                  ],
+                );
+              },
             ),
           ),
         ),
