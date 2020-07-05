@@ -8,7 +8,12 @@ import 'package:virtual_shop/models/orders/admin_orders_manager.dart';
 import 'package:virtual_shop/common/order/order_tile.dart';
 import 'package:virtual_shop/models/orders/order.dart';
 
-class AdminOrdersScreen extends StatelessWidget {
+class AdminOrdersScreen extends StatefulWidget {
+  @override
+  _AdminOrdersScreenState createState() => _AdminOrdersScreenState();
+}
+
+class _AdminOrdersScreenState extends State<AdminOrdersScreen> {
   final PanelController panelController = PanelController();
 
   @override

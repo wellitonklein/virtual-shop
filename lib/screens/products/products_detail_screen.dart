@@ -23,16 +23,17 @@ class ProductsDetailScreen extends StatelessWidget {
           title: Text(product.name),
           actions: <Widget>[
             Consumer<UserManager>(
-              builder: (_, userManager, __) => !userManager.adminEnabled
-                  ? Container()
-                  : IconButton(
-                      icon: Icon(Icons.edit),
-                      onPressed: () =>
-                          Navigator.of(context).pushReplacementNamed(
-                        '/product-edit',
-                        arguments: product,
-                      ),
-                    ),
+              builder: (_, userManager, __) =>
+                  (!userManager.adminEnabled && product.deleted)
+                      ? Container()
+                      : IconButton(
+                          icon: Icon(Icons.edit),
+                          onPressed: () =>
+                              Navigator.of(context).pushReplacementNamed(
+                            '/product-edit',
+                            arguments: product,
+                          ),
+                        ),
             ),
           ],
         ),
@@ -89,21 +90,37 @@ class ProductsDetailScreen extends StatelessWidget {
                     product.description,
                     style: const TextStyle(fontSize: 16),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 16, bottom: 8),
-                    child: Text(
-                      'Tamanhos',
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                  if (product.deleted)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 16, bottom: 8),
+                      child: Text(
+                        'Este produto não está mais disponível',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.red,
+                        ),
+                      ),
+                    )
+                  else ...[
+                    Padding(
+                      padding: const EdgeInsets.only(top: 16, bottom: 8),
+                      child: Text(
+                        'Tamanhos',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
                     ),
-                  ),
-                  Wrap(
-                    spacing: 8,
-                    runSpacing: 8,
-                    children: product.sizes
-                        .map((size) => SizeWidget(itemSize: size))
-                        .toList(),
-                  ),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: product.sizes
+                          .map((size) => SizeWidget(itemSize: size))
+                          .toList(),
+                    ),
+                  ],
                   const SizedBox(height: 20),
                   if (product.hasStock)
                     Consumer2<UserManager, Product>(

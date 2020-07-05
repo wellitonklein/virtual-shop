@@ -14,6 +14,7 @@ class Product extends ChangeNotifier {
   List<ItemSize> sizes;
   ItemSize _selectedSize;
   List<dynamic> newImages;
+  bool deleted;
 
   final Firestore firestore = Firestore.instance;
   final FirebaseStorage storage = FirebaseStorage.instance;
@@ -21,7 +22,14 @@ class Product extends ChangeNotifier {
   DocumentReference get firestoreRef => firestore.document('products/$id');
   StorageReference get storageRef => storage.ref().child('products').child(id);
 
-  Product({this.id, this.name, this.description, this.images, this.sizes}) {
+  Product({
+    this.id,
+    this.name,
+    this.description,
+    this.images,
+    this.sizes,
+    this.deleted = false,
+  }) {
     images = images ?? [];
     sizes = sizes ?? [];
   }
@@ -31,6 +39,7 @@ class Product extends ChangeNotifier {
     name = document['name'] as String;
     description = document['description'] as String;
     images = List<String>.from(document.data['images'] as List<dynamic>);
+    deleted = (document['deleted'] ?? false) as bool;
     sizes = (document.data['sizes'] as List<dynamic> ?? [])
         .map((s) => ItemSize.fromMap(s as Map<String, dynamic>))
         .toList();
@@ -59,13 +68,13 @@ class Product extends ChangeNotifier {
     return stock;
   }
 
-  bool get hasStock => totalStock > 0;
+  bool get hasStock => totalStock > 0 && !deleted;
 
   num get basePrice {
     num lowest = double.infinity;
 
     for (final size in sizes) {
-      if (size.price < lowest && size.hasStock) {
+      if (size.price < lowest) {
         lowest = size.price;
       }
     }
@@ -88,6 +97,7 @@ class Product extends ChangeNotifier {
       description: description,
       images: List.from(images),
       sizes: sizes.map((size) => size.clone()).toList(),
+      deleted: deleted,
     );
   }
 
@@ -102,6 +112,7 @@ class Product extends ChangeNotifier {
       'name': name,
       'description': description,
       'sizes': exportSizeList(),
+      'deleted': deleted,
     };
 
     if (id == null) {
@@ -126,7 +137,7 @@ class Product extends ChangeNotifier {
     }
 
     for (final image in images) {
-      if (!newImages.contains(image)) {
+      if (!newImages.contains(image) && image.contains('firebase')) {
         try {
           final ref = await storage.getReferenceFromUrl(image);
           await ref.delete();
@@ -139,5 +150,9 @@ class Product extends ChangeNotifier {
     images = updateImages;
 
     loading = false;
+  }
+
+  Future<void> delete() async {
+    await firestoreRef.updateData({'deleted': true});
   }
 }
